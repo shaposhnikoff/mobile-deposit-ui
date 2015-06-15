@@ -22,7 +22,7 @@ node('docker') {
             }
     }
     docker.withServer('tcp://54.173.235.97:2375') {
-        unarchive mapping: ['target/mobile-deposit-api.jar': '.', 'target/Dockerfile': '.']
+        unarchive mapping: ['target/mobile-deposit-ui.jar': '.', 'target/Dockerfile': '.']
         stage 'build docker image'
         def mobileDepositApiImage = docker.build "mobile-deposit-ui:${dockerBuildTag}"
 
