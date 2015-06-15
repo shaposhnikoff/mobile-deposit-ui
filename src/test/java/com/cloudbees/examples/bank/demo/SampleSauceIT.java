@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -57,6 +57,8 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	@Rule
 	public SauceOnDemandTestWatcher resultReportingTestWatcher = new SauceOnDemandTestWatcher(
 			this, authentication);
+	
+	@Rule public TestName name = new TestName();
 
 	/**
 	 * Represents the browser to be used as part of the test run.
@@ -129,9 +131,6 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		// this.testContextManager = new TestContextManager(getClass());
-		// this.testContextManager.prepareTestInstance(this);
-
 		this.browser = "safari";
 		this.version = "6";
 		this.os = "OSX 10.8";
@@ -142,7 +141,7 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 			capabilities.setCapability(CapabilityType.VERSION, version);
 		}
 		capabilities.setCapability(CapabilityType.PLATFORM, os);
-		capabilities.setCapability("name", "Sauce Sample Test");
+		capabilities.setCapability("name", "Mobile Deposit: " + name.getMethodName());
 		this.driver = new RemoteWebDriver(new URL("http://"
 				+ authentication.getUsername() + ":"
 				+ authentication.getAccessKey()
@@ -158,14 +157,12 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 * @throws Exception
 	 */
 	@Test
-	@Category(com.cloudbees.examples.bank.demo.FunctionalTest.class)
 	public void hasAnAccountNumber() throws Exception {
 		driver.get("http://localhost:8081/deposit"); // TODO parameterize
 		assertNotNull(driver.findElement(By.className("account-number")));
 	}
 
 	@Test
-	@Category(com.cloudbees.examples.bank.demo.FunctionalTest.class)
 	public void hasMaskedAccountNumber() throws Exception {
 		driver.get("http://localhost:8081/deposit"); // TODO parameterize
 		WebElement accountNumber = driver.findElement(By
