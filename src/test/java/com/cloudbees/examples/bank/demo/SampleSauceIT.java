@@ -172,14 +172,14 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 		assertNotNull(driver.findElement(By.className("account-number")));
 	}
 
-	@Test
-	public void hasMaskedAccountNumber() throws Exception {
-		driver.get("http://54.173.235.97:82/deposit"); // TODO parameterize
-		WebElement accountNumber = driver.findElement(By
-				.className("account-number"));
-		assertTrue("Account Number must end and only contain 4 digits!",
-				Pattern.matches("([^\\d]*)([\\d]{4})", accountNumber.getText()));
-	}
+//	@Test
+//	public void hasMaskedAccountNumber() throws Exception {
+//		driver.get("http://54.173.235.97:82/deposit"); // TODO parameterize
+//		WebElement accountNumber = driver.findElement(By
+//				.className("account-number"));
+//		assertTrue("Account Number must end and only contain 4 digits!",
+//				Pattern.matches("([^\\d]*)([\\d]{4})", accountNumber.getText()));
+//	}
 
 	/**
 	 * Closes the {@link WebDriver} session.
