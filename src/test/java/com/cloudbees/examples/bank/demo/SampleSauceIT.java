@@ -37,7 +37,7 @@ import com.saucelabs.junit.SauceOnDemandTestWatcher;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 // @RunWith(Parameterized.class)
-@WebIntegrationTest("server.port:8081")
+@WebIntegrationTest({"server.port:8081", "api.proto:http", "api.host:54.165.201.3", "api.port:80"})
 @SpringApplicationConfiguration(classes = com.cloudbees.examples.bank.demo.App.class)
 public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 
