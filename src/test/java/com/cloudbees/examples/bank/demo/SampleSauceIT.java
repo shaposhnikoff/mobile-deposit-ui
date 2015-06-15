@@ -18,6 +18,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,10 +40,10 @@ import com.saucelabs.junit.SauceOnDemandTestWatcher;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 // @RunWith(Parameterized.class)
-@WebIntegrationTest({"server.port:8081", "api.proto:http", "api.host:54.165.201.3", "api.port:80"})
+@WebIntegrationTest({"server.port:0", "api.proto:http", "api.host:bank-api.beedemo.net", "api.port:8080"})
 @SpringApplicationConfiguration(classes = com.cloudbees.examples.bank.demo.App.class)
 public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
-
+	
 	/**
 	 * Constructs a {@link SauceOnDemandAuthentication} instance using the
 	 * supplied user name/access key. To use the authentication supplied by
@@ -59,6 +62,13 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 			this, authentication);
 	
 	@Rule public TestName name = new TestName();
+	
+	@Autowired
+    EmbeddedWebApplicationContext server;
+
+    @Value("${local.server.port}")
+    int port;
+
 
 	/**
 	 * Represents the browser to be used as part of the test run.
@@ -158,13 +168,13 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 */
 	@Test
 	public void hasAnAccountNumber() throws Exception {
-		driver.get("http://localhost:8081/deposit"); // TODO parameterize
+		driver.get("http://localhost:" + port + "/deposit"); // TODO parameterize
 		assertNotNull(driver.findElement(By.className("account-number")));
 	}
 
 	@Test
 	public void hasMaskedAccountNumber() throws Exception {
-		driver.get("http://localhost:8081/deposit"); // TODO parameterize
+		driver.get("http://localhost:" + port + "deposit"); // TODO parameterize
 		WebElement accountNumber = driver.findElement(By
 				.className("account-number"));
 		assertTrue("Account Number must end and only contain 4 digits!",
