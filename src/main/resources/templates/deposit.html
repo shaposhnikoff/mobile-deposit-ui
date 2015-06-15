@@ -17,6 +17,7 @@
                     dataType: "json"
                 }).then(function(data) {
                    $('.account-number').append(data.accountNumber);
+                   $('.name').append(data.name);
                    $('.balance').append(data.balance);
                    $('.version').append(data.version);
                 });
@@ -43,7 +44,7 @@
                         <input type="radio" name="radio-choice-1" id="radio-choice-1" value="choice-1" checked="checked" />
                         <label for="radio-choice-1">
                             <span class="account-number"></span> - 
-                            <span class="account-name"></span> - 
+                            <span class="name"></span> - 
                             <span class="balance">$</span>
                         </label>
                     </fieldset>
