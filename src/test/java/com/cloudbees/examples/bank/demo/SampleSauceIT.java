@@ -39,7 +39,7 @@ import com.saucelabs.junit.SauceOnDemandTestWatcher;
 // @RunWith(Parameterized.class)
 @WebIntegrationTest("server.port:8081")
 @SpringApplicationConfiguration(classes = com.cloudbees.examples.bank.demo.App.class)
-public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
+public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 
 	/**
 	 * Constructs a {@link SauceOnDemandAuthentication} instance using the
@@ -99,7 +99,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
 	// this.browser = browser;
 	// }
 
-	public SampleSauceTest() {
+	public SampleSauceIT() {
 	}
 
 	/**
