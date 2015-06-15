@@ -40,7 +40,7 @@ import com.saucelabs.junit.SauceOnDemandTestWatcher;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 // @RunWith(Parameterized.class)
-@WebIntegrationTest({"server.port:9001", "api.proto:http", "api.host:54.173.235.97", "api.port:8080"})
+@WebIntegrationTest({"server.port:82", "api.proto:http", "api.host:54.173.235.97", "api.port:8080"})
 @SpringApplicationConfiguration(classes = com.cloudbees.examples.bank.demo.App.class)
 public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	
@@ -168,13 +168,13 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 */
 	@Test
 	public void hasAnAccountNumber() throws Exception {
-		driver.get("http://localhost:" + port + "/deposit"); // TODO parameterize
+		driver.get("http://54.173.235.97:82/deposit"); // TODO parameterize
 		assertNotNull(driver.findElement(By.className("account-number")));
 	}
 
 	@Test
 	public void hasMaskedAccountNumber() throws Exception {
-		driver.get("http://localhost:" + port + "deposit"); // TODO parameterize
+		driver.get("http://54.173.235.97:82/deposit"); // TODO parameterize
 		WebElement accountNumber = driver.findElement(By
 				.className("account-number"));
 		assertTrue("Account Number must end and only contain 4 digits!",
