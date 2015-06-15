@@ -14,7 +14,7 @@ Per [Spring boot convention](http://docs.spring.io/spring-boot/docs/current/refe
 
 Here's a full example:
 ```
-spring run app.groovy -- --server.port=8081 --api.proto="https" --api.host="madelberton.com" --api.port="8081"
+mvn clean package && java -jar target/mobile-deposit-ui-1.0-SNAPSHOT.jar --api.host="kmadel.com" --api.proto="httpsandsuch" --server.port=8081
 ```
 
 Note you'll need to install the Spring Boot CLI https://spring.io/guides/gs/spring-boot-cli-and-js/#scratch

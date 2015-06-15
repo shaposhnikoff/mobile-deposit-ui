@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Bank of Jenkins</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+        <script type="text/javascript" th:inline="javascript">
+            $(document).ready(function() {
+                var apiProto = /*[[${apiProto}]]*/;
+                var apiHost = /*[[${apiHost}]]*/;
+                var apiPort = /*[[${apiPort}]]*/;
+                $.ajax({
+                    url:  apiProto + "://" + apiHost + ":" + apiPort + "/account/deposit",
+                    dataType: "json"
+                }).then(function(data) {
+                   $('.account-number').append(data.accountNumber);
+                   $('.balance').append(data.balance);
+                   $('.version').append(data.version);
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <div data-role="page" data-theme="a">
+
+            <div data-role="header" data-theme="b">
+                <h1><img style="vertical-align:middle;" src="jenkins-logo.png" /> Bank of Jenkins</h1>
+            </div><!-- /header -->
+
+            <div data-role="content">   
+
+    
+            <h2 class="ui-bar ui-bar-a ui-corner-all">Mobile Deposit</h2>
+            <div class="ui-body ui-body-a ui-corner-all">
+    
+                <form>
+                    <fieldset data-role="controlgroup">
+                        <legend>Account:</legend>
+                        <input type="radio" name="radio-choice-1" id="radio-choice-1" value="choice-1" checked="checked" />
+                        <label for="radio-choice-1">
+                            <span class="account-number"></span> - 
+                            <span class="account-name"></span> - 
+                            <span class="balance">$</span>
+                        </label>
+                    </fieldset>
+
+                    <label for="deposit-amount">Deposit Amount:</label>
+                    <input type="number" name="number" pattern="[0-9]*" id="deposit-amount" value="0.00" />
+                    <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-camera">Check Photos</button>
+
+                </form>
+            
+            </div>
+
+                
+            </div><!-- /content -->
+
+            <div data-role="footer" data-position="fixed">
+                <h4 class="">www.cloudbees.com</h4>
+                <a style="font-size:10px;" href="#" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all">Version:</a>
+
+            </div><!-- /footer -->
+
+        </div><!-- /page -->
+    </body>
+</html>
