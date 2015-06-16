@@ -17,22 +17,23 @@ node('docker') {
                     echo "Releaed version ${buildVersion}"
                 }
                 matcher = null
-                archive "target/mobile-deposit-ui.jar, target/Dockerfile"
             }
     }
-    docker.withServer('tcp://54.173.235.97:2375') {
-        unarchive mapping: ['target/mobile-deposit-ui.jar': '.', 'target/Dockerfile': '.']
+    docker.withServer('tcp://54.165.201.3:2376', 'slave-docker-us-east-1-tls'){
         stage 'build docker image'
-        def mobileDepositApiImage = docker.build "mobile-deposit-ui:${dockerBuildTag}"
+        def mobileDepositUiImage
+        dir('target') {
+            mobileDepositUiImage = docker.build "mobile-deposit-ui:${buildVersion}"
+        }
         try{
             sh "docker stop mobile-deposit-ui-stage"
             sh "docker rm mobile-deposit-ui-stage"
         } catch (Exception _) {
             echo "no container to stop"
         }
-        sh "docker run -d --name mobile-deposit-ui-stage -p 82:8080 mobile-deposit-ui:${dockerBuildTag}"
+        mobileDepositUiImage.run("--name mobile-deposit-ui-stage -p 82:8080")
 
-        input 'UI Staged at http://54.173.235.97:82/deposit - Proceed with Production Deployment?'
+        input 'UI Staged at http://54.165.201.3:82/deposit - Proceed with Production Deployment?'
 
         stage 'deploy to production'
         try{
@@ -41,7 +42,7 @@ node('docker') {
         } catch (Exception _) {
             echo "no container to stop"
         }
-        sh "docker run -d --name mobile-deposit-ui -p 80:8080 mobile-deposit-ui:${dockerBuildTag}"
+        mobileDepositUiImage.run("--name mobile-deposit-ui -p 80:8080")
     }
 
 }

@@ -146,7 +146,7 @@ public class MobileDepositFunctionalTests implements SauceOnDemandSessionIdProvi
 	 */
 	@Test
 	public void hasAnAccountNumber() throws Exception {
-		driver.get("http://54.173.235.97:82/deposit");
+		driver.get("http://54.165.201.3:82/deposit");
 		assertNotNull(driver.findElement(By.className("account-number")));
 	}
 
