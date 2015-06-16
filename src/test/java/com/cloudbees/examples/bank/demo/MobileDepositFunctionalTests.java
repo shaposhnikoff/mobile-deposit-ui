@@ -1,10 +1,10 @@
 package com.cloudbees.examples.bank.demo;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
-import java.util.regex.Pattern;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,19 +14,13 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.saucelabs.common.SauceOnDemandAuthentication;
 import com.saucelabs.common.SauceOnDemandSessionIdProvider;
+import com.saucelabs.junit.ConcurrentParameterized;
 import com.saucelabs.junit.SauceOnDemandTestWatcher;
 
 /**
@@ -36,14 +30,11 @@ import com.saucelabs.junit.SauceOnDemandTestWatcher;
  * The test also includes the {@link SauceOnDemandTestWatcher} which will invoke
  * the Sauce REST API to mark the test as passed or failed.
  * 
- * @author Ross Rowe
+ * @author Andy Pemberton
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-// @RunWith(Parameterized.class)
-@WebIntegrationTest({"server.port:0", "api.proto:http", "api.host:54.173.235.97", "api.port:8080"})
-@SpringApplicationConfiguration(classes = com.cloudbees.examples.bank.demo.App.class)
-public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
-	
+@RunWith(ConcurrentParameterized.class)
+public class MobileDepositFunctionalTests implements SauceOnDemandSessionIdProvider {
+
 	/**
 	 * Constructs a {@link SauceOnDemandAuthentication} instance using the
 	 * supplied user name/access key. To use the authentication supplied by
@@ -60,15 +51,9 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	@Rule
 	public SauceOnDemandTestWatcher resultReportingTestWatcher = new SauceOnDemandTestWatcher(
 			this, authentication);
-	
-	@Rule public TestName name = new TestName();
-	
-	@Autowired
-    EmbeddedWebApplicationContext server;
 
-    @Value("${local.server.port}")
-    int port;
-
+	@Rule
+	public TestName name = new TestName();
 
 	/**
 	 * Represents the browser to be used as part of the test run.
@@ -104,14 +89,11 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 * @param version
 	 * @param browser
 	 */
-	// public SampleSauceTest(String os, String version, String browser) {
-	// super();
-	// this.os = os;
-	// this.version = version;
-	// this.browser = browser;
-	// }
-
-	public SampleSauceIT() {
+	public MobileDepositFunctionalTests(String os, String version, String browser) {
+		super();
+		this.os = os;
+		this.version = version;
+		this.browser = browser;
 	}
 
 	/**
@@ -120,13 +102,13 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 *         String array are used as part of the invocation of the test
 	 *         constructor
 	 */
-	// @Parameters
-	// public static List<String[]> browsersStrings() {
-	// LinkedList<String[]> browsers = new LinkedList<String[]>();
-	// browsers.add(new String[] { "Windows 8.1", "11", "internet explorer" });
-	// browsers.add(new String[] { "OSX 10.8", "6", "safari" });
-	// return browsers;
-	// }
+	@ConcurrentParameterized.Parameters
+	public static List<String[]> browsersStrings() {
+		LinkedList<String[]> browsers = new LinkedList<String[]>();
+		browsers.add(new String[] { "Windows 8.1", "11", "internet explorer" });
+		browsers.add(new String[] { "OSX 10.8", "6", "safari" });
+		return browsers;
+	}
 
 	/**
 	 * Constructs a new {@link RemoteWebDriver} instance which is configured to
@@ -141,24 +123,20 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.browser = "safari";
-		this.version = "6";
-		this.os = "OSX 10.8";
-
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
 		if (version != null) {
 			capabilities.setCapability(CapabilityType.VERSION, version);
 		}
 		capabilities.setCapability(CapabilityType.PLATFORM, os);
-		capabilities.setCapability("name", "Mobile Deposit: " + name.getMethodName());
+		capabilities.setCapability("name",
+				"Mobile Deposit: " + name.getMethodName());
 		this.driver = new RemoteWebDriver(new URL("http://"
 				+ authentication.getUsername() + ":"
 				+ authentication.getAccessKey()
 				+ "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
 
 		this.sessionId = (((RemoteWebDriver) driver).getSessionId()).toString();
-
 	}
 
 	/**
@@ -168,18 +146,18 @@ public class SampleSauceIT implements SauceOnDemandSessionIdProvider {
 	 */
 	@Test
 	public void hasAnAccountNumber() throws Exception {
-		driver.get("http://54.173.235.97:82/deposit"); 
+		driver.get("http://54.173.235.97:82/deposit");
 		assertNotNull(driver.findElement(By.className("account-number")));
 	}
 
-	@Test
-	public void hasMaskedAccountNumber() throws Exception {
-		driver.get("http://54.173.235.97:82/deposit"); 
-		WebElement accountNumber = driver.findElement(By
-				.className("account-number"));
-		assertTrue("Account Number must end and only contain 4 digits!",
-				Pattern.matches("([^\\d]*)([\\d]{4})", accountNumber.getText()));
-	}
+	// @Test
+	// public void hasMaskedAccountNumber() throws Exception {
+	// driver.get("http://localhost:" + port + "deposit"); // TODO parameterize
+	// WebElement accountNumber = driver.findElement(By
+	// .className("account-number"));
+	// assertTrue("Account Number must end and only contain 4 digits!",
+	// Pattern.matches("([^\\d]*)([\\d]{4})", accountNumber.getText()));
+	// }
 
 	/**
 	 * Closes the {@link WebDriver} session.
