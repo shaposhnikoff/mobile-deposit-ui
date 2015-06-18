@@ -17,4 +17,6 @@ Here's a full example:
 mvn clean package && java -jar target/mobile-deposit-ui-1.0-SNAPSHOT.jar --api.host="bank-api.beedemo.net" --api.proto="http" --api.port="8080" --server.port=8081
 ```
 
+edit
+
 Note you'll need to install the Spring Boot CLI https://spring.io/guides/gs/spring-boot-cli-and-js/#scratch
