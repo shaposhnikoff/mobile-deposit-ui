@@ -1,7 +1,7 @@
 def dockerBuildTag = 'latest'
 def buildVersion = null
 stage 'build'
-node('docker') {
+node('docker-cloud') {
     def mobileDepositUiImage
     docker.withServer('tcp://127.0.0.1:1234'){ //run the following steps on this Docker host
             docker.image('kmadel/maven:3.3.3-jdk-8').inside('-v /data:/data') { //use this image as the build environment
