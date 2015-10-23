@@ -37,11 +37,13 @@ node('docker-cloud') {
         stage 'functional-test'
         sh 'mvn -s /data/mvn/settings.xml -Dmaven.repo.local=/data/mvn/repo verify'
     }
-
-    input 'UI Staged at http://54.165.201.3:82/deposit - Proceed with Production Deployment?'
+}
+stage 'awaiting approval'
+//put input step outside of node so it doesn't tie up a slave
+input 'UI Staged at http://54.165.201.3:82/deposit - Proceed with Production Deployment?'
+stage 'deploy to production'
+node('docker-cloud') {
     docker.withServer('tcp://54.165.201.3:2376', 'slave-docker-us-east-1-tls'){
-
-        stage 'deploy to production'
         try{
             sh "docker stop mobile-deposit-ui"
             sh "docker rm mobile-deposit-ui"
