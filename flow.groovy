@@ -19,7 +19,7 @@ node('docker-cloud') {
     //}
 
     //build image and deploy to staging
-    docker.withServer('tcp://54.165.201.3:2376', 'slave-docker-us-east-1-tls') { //run following steps on our staging server
+    docker.withServer('tcp://52.26.31.52:3376', 'beedemo-swarm-cert') { //run following steps on our staging server
         stage 'build docker image'
         dir('target') {
             mobileDepositUiImage = docker.build "mobile-deposit-ui:${buildVersion}"
@@ -43,7 +43,7 @@ stage 'awaiting approval'
 input 'UI Staged at http://54.165.201.3:82/deposit - Proceed with Production Deployment?'
 stage 'deploy to production'
 node('docker-cloud') {
-    docker.withServer('tcp://54.165.201.3:2376', 'slave-docker-us-east-1-tls'){
+    docker.withServer('tcp://52.26.31.52:3376', 'beedemo-swarm-cert'){
         try{
             sh "docker stop mobile-deposit-ui"
             sh "docker rm mobile-deposit-ui"
