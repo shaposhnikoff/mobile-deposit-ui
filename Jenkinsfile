@@ -31,7 +31,7 @@ node('docker-cloud') {
             echo "no container to stop"
         }
         stage 'deploy to staging'
-        mobileDepositUiImage.run("--name mobile-deposit-ui-stage -p 82:8080")
+        mobileDepositUiImage.run("--name mobile-deposit-ui-stage -p 82:8080 --env='constraint:node==beedemo-swarm-master'")
     }
     docker.image('kmadel/maven:3.3.3-jdk-8').inside('-v /data:/data') {
         stage 'functional-test'
@@ -50,7 +50,7 @@ node('docker-cloud') {
         } catch (Exception _) {
             echo "no container to stop"
         }
-        mobileDepositUiImage.run("--name mobile-deposit-ui -p 80:8080")
+        mobileDepositUiImage.run("--name mobile-deposit-ui -p 80:8080 --env='constraint:node==beedemo-swarm-master'")
         //sh 'curl http://webhook:58f11cf04cecbe5633031217794eda89@jenkins.beedemo.net/mobile-team/docker-traceability/submitContainerStatus --data-urlencode inspectData="$(docker inspect mobile-deposit-ui)"'
     }
 
