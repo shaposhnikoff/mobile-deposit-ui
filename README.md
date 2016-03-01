@@ -22,8 +22,8 @@ edit
 Note you'll need to install the Spring Boot CLI https://spring.io/guides/gs/spring-boot-cli-and-js/#scratch
 
 ###Management Endpoints
-GET /spring/info - customised to show the scm and build related info
-POST /spring/shutdown - cause the container to stop. Useful for 
+GET /info - customised to show the scm and build related info
+POST /shutdown - cause the container to stop. Useful for 
 shutting down at the end of build testing
 
 ##Build Properties
