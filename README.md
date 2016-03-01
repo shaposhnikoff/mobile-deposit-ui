@@ -20,3 +20,15 @@ mvn clean package && java -jar target/mobile-deposit-ui-1.0-SNAPSHOT.jar --api.h
 edit
 
 Note you'll need to install the Spring Boot CLI https://spring.io/guides/gs/spring-boot-cli-and-js/#scratch
+
+###Management Endpoints
+GET /info - customised to show the scm and build related info
+POST /shutdown - cause the container to stop. Useful for 
+shutting down at the end of build testing
+
+##Build Properties
+The following can be specified at build time to inject version information:
+
+${BUILD_NUMBER}
+${BUILD_URL}
+${GIT_COMMIT}
