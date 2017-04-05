@@ -4,7 +4,7 @@ def mobileDepositUiImage = null
 stage 'build'
 
 
-node("docker") {
+node("master") {
     docker.withRegistry('tcp://192.168.1.10:4342', '<<your-docker-registry-credentials-id>>') {
         git url: "<<your-git-repo-url>>", credentialsId: '<<your-git-credentials-id>>'
         sh "git rev-parse HEAD > .git/commit-id"
