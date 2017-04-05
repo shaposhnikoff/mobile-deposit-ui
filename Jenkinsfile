@@ -18,7 +18,7 @@ node('master') {
     }
 
     //build image and deploy to staging
-    docker.withServer('tcp://52.27.249.236:3376', 'beedemo-swarm-cert') { //run following steps on our staging server
+    docker.withServer('tcp://192.168.1.4:5555', 'beedemo-swarm-cert') { //run following steps on our staging server
         stage 'build docker image'
         dir('target') {
             mobileDepositUiImage = docker.build "mobile-deposit-ui:${buildVersion}"
@@ -37,20 +37,5 @@ node('master') {
         sh 'mvn -Dmaven.repo.local=/data/mvn/repo verify'
     }
 }
-stage 'awaiting approval'
-//put input step outside of node so it doesn't tie up a slave
-input 'UI Staged at http://52.27.249.236:82/deposit - Proceed with Production Deployment?'
-stage 'deploy to production'
-node('docker-cloud') {
-    docker.withServer('tcp://52.27.249.236:3376', 'beedemo-swarm-cert'){
-        try{
-            sh "docker stop mobile-deposit-ui"
-            sh "docker rm mobile-deposit-ui"
-        } catch (Exception _) {
-            echo "no container to stop"
-        }
-        mobileDepositUiImage.run("--name mobile-deposit-ui -p 80:8080 --env='constraint:node==beedemo-swarm-master'")
-        //sh 'curl http://webhook:58f11cf04cecbe5633031217794eda89@jenkins.beedemo.net/mobile-team/docker-traceability/submitContainerStatus --data-urlencode inspectData="$(docker inspect mobile-deposit-ui)"'
-    }
 
-}
+
