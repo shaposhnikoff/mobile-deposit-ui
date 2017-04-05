@@ -3,12 +3,11 @@ def buildVersion = null
 def mobileDepositUiImage = null
 stage 'build'
 node('master') {
-            docker.withServer('tcp://192.168.1.10:4243'){ //run the following steps on this Docker host
-            docker.image('kmadel/maven:3.3.3-jdk-8').inside('-v /data:/data') { //use this image as the build environment
+            docker.withServer('tcp://192.168.1.10:4243'){
+                docker.image('kmadel/maven:3.3.3-jdk-8').inside('-v /data:/data') { 
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/cloudbees/mobile-deposit-ui.git']]])
                 sh 'mvn -Dmaven.repo.local=/data/mvn/repo clean package'
 
-                //get new version of application from pom
                 def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                 if (matcher) {
                     buildVersion = matcher[0][1]
@@ -16,7 +15,7 @@ node('master') {
                 }
                 matcher = null
             }
-    //}
+    }
 
     //build image and deploy to staging
     docker.withServer('tcp://52.27.249.236:3376', 'beedemo-swarm-cert') { //run following steps on our staging server
