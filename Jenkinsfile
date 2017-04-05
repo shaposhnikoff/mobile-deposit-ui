@@ -6,7 +6,7 @@ stage 'build'
 
 node("master") {
     docker.withRegistry('tcp://192.168.1.10:4342') {
-        git url: "<<your-git-repo-url>>", credentialsId: '<<your-git-credentials-id>>'
+        git url: "https://github.com/shaposhnikoff/mobile-deposit-ui'
         sh "git rev-parse HEAD > .git/commit-id"
         def commit_id = readFile('.git/commit-id').trim()
         println commit_id
@@ -17,6 +17,7 @@ node("master") {
         app.push "${commit_id}"
     }
 }
+
 
 
 
